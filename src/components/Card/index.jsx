@@ -1,50 +1,53 @@
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import DefaultPicture from '../../assets/profile.png'
 import colors from '../../utils/style/colors'
-
-const CardWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  background-color: ${colors.backgroundLight};
-  border-radius: 30px;
-  width: 300px;
-  height: 300px;
-  transition: 200ms;
-  &:hover {
-      cursor: pointer;
-      box-shadow: 2px 2px 10px #e2e3e9;
-  }
-`
+import { useTheme } from '../../utils/hooks'
+import DefaultPicture from '../../assets/profile.png'
 
 const CardLabel = styled.span`
-  color: ${colors.secondary};
+  color: ${({ theme }) => (theme === 'light' ? colors.primary : '#ffffff')};
   font-size: 22px;
-  padding-left: 15px;
   font-weight: normal;
+  padding-left: 15px;
 `
 
 const CardTitle = styled.span`
-  color: black;
+  color: ${({ theme }) => (theme === 'light' ? '#000000' : '#ffffff')};
   font-size: 22px;
-  align-self: center;
   font-weight: normal;
+  align-self: center;
 `
 
 const CardImage = styled.img`
-  width: 150px;
   height: 150px;
+  width: 150px;
   align-self: center;
   border-radius: 50%;
 `
 
+const CardWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 15px;
+  background-color: ${({ theme }) =>
+    theme === 'light' ? colors.backgroundLight : colors.backgroundDark};
+  border-radius: 30px;
+  width: 300px;
+  height: 300px;
+  &:hover {
+    cursor: pointer;
+  }
+`
+
 function Card({ label, title, picture }) {
+  const { theme } = useTheme()
+
   return (
-    <CardWrapper>
-      <CardLabel>{label}</CardLabel>
-      <CardImage src={picture} alt="freelance"  />
-      <CardTitle>{title}</CardTitle>
+    <CardWrapper theme={theme}>
+      <CardLabel theme={theme}>{label}</CardLabel>
+      <CardImage src={picture} alt="freelance" />
+      <CardTitle theme={theme}>{title}</CardTitle>
     </CardWrapper>
   )
 }
@@ -60,4 +63,5 @@ Card.defaultProps = {
   title: '',
   picture: DefaultPicture,
 }
+
 export default Card

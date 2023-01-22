@@ -1,6 +1,8 @@
 import Card from '../../components/Card'
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
+import {useFetch, useTheme} from '../../utils/hooks'
+import {Loader} from '../../utils/style/Atoms'
 
 const CardsContainer = styled.div`
   display: grid;
@@ -26,30 +28,36 @@ const PageSubtitle = styled.h2`
   padding-bottom: 30px;
 `
 
-const freelanceProfiles = [
-  {
-    name: 'Jane Doe',
-    jobTitle: 'Devops',
-  },
-  {
-    name: 'John Doe',
-    jobTitle: 'Developpeur frontend',
-  },
-  {
-    name: 'Jeanne Biche',
-    jobTitle: 'Développeuse Fullstack',
-  },
-]
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+
 
 function Freelances() {
+  const {theme} = useTheme()
+  const {data, isLoading, error} = useFetch(`http://localhost:8000/freelances`)
+
+  const freelancersList = data?.freelancersList
+
+  if(error){
+    return <span>Oups il y'a eu un probleme</span>
+  }
+
   return (
     <div>
       <PageTitle>Trouvez votre prestataire</PageTitle>
       <PageSubtitle>
         Chez Shiny nous réunissons les meilleurs profils pour vous.
       </PageSubtitle>
+      {isLoading ? 
+      <LoaderWrapper>
+        <Loader theme={theme} />
+      </LoaderWrapper>  
+      : 
       <CardsContainer>
-        {freelanceProfiles.map((profile, index) => (
+        {freelancersList.map((profile, index) => (
           <Card
             key={`${profile.name}-${index}`}
             label={profile.jobTitle}
@@ -57,6 +65,7 @@ function Freelances() {
           />
         ))}
       </CardsContainer>
+    }
     </div>
   )
 }
